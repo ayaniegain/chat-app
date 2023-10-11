@@ -15,6 +15,14 @@ const userSchema = new mongoose.Schema({
         type:String,
         required: true,
     },
+    isAvatarImageSet:{
+        type:Boolean,
+        default: false,
+    },
+    avatarImage:{
+        type:String,
+        default: '',
+    }
     // confirmPassword:{
     //     type:String,
     //     required: true,
