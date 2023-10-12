@@ -9,16 +9,29 @@ const authRegisterController = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 8);
 
-    const new_user = await new userModel({
+    const existingUser= await userModel.find({username});
+
+    console.log(existingUser);
+
+    if (existingUser) {
+      return res.status(404).send({
+        success: false,
+        message: "duplicate user found",
+      });
+    }
+
+    const user = await new userModel({
       username,
       email,
       password: hashedPassword,
     }).save();
 
+   
+
     res.status(201).send({
       success: true,
       message: "User Register Successfully",
-      new_user,
+      user,
     });
   } catch (error) {
     console.error(error);
@@ -37,6 +50,8 @@ const authLoginController = async (req, res) => {
     // Validate input data here
 
     const getdata = await userModel.findOne({ username });
+
+    console.log(getdata);
 
     if (!getdata) {
       return res.status(404).send({
@@ -69,4 +84,26 @@ const authLoginController = async (req, res) => {
   }
 };
 
-module.exports = { authRegisterController, authLoginController };
+const setAvatarController=async (req,res)=>{
+  try {
+    const userId = req.params.id;
+    const avatarImage = req.body.image;
+    const userData = await User.findByIdAndUpdate(
+      userId,
+      {
+        isAvatarImageSet: true,
+        avatarImage,
+      },
+      { new: true }
+    );
+    return res.json({
+      isSet: userData.isAvatarImageSet,
+      image: userData.avatarImage,
+    });
+  } catch (ex) {
+    next(ex);
+  }
+
+}
+
+module.exports = { authRegisterController, authLoginController ,setAvatarController };

@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import axios from "axios"
+import { useEffect } from "react";
 
 function Login() {
   const navigate=useNavigate()
   const [values, setValues] = useState({
     username: "",
-    email: "",
     password: "",
-    // confirmPassword: "",
   });
 
   const handleSubmit = async (event) => {
@@ -17,11 +16,9 @@ function Login() {
     if (validationfunc()) {
       try {
         const { username, email, password, confirmPassword } = values;
-        console.log("object");
         const { data } = await axios.post(
           `${import.meta.env.VITE_REACT_APP_API}/api/v1/auth/login`,
           {username:username,
-          email:email,
           password:password,
           // confirmPassword:confirmPassword,
           }
@@ -32,7 +29,7 @@ function Login() {
           setTimeout(() => {
             toast.success(data.message);
           }, 1000);
-          navigate("/");
+          // navigate("/");
         } else {
           toast.error(data.message);
         }
@@ -41,6 +38,7 @@ function Login() {
       }
     }
   };
+
 
   const validationfunc = () => {
     const { username, password, confirmPassword } = values;
@@ -62,6 +60,15 @@ function Login() {
   const handleChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
+
+  useEffect(()=>{
+    if(localStorage.getItem('chat')){
+      // navigate("/");
+
+
+    }
+  },[])
+
 
   return (
     <>
@@ -91,22 +98,7 @@ function Login() {
                   className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
                 />
               </div>
-              <div className="mb-6">
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm text-gray-600 dark:text-gray-400"
-                >
-                  Email Address
-                </label>
-                <input
-                  required
-                  onChange={(e) => handleChange(e)}
-                  type="email"
-                  name="email"
-                  placeholder="Your email address"
-                  className="w-full px-3 py-2 placeholder-gray-300 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-100 focus:border-indigo-300 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500 dark:border-gray-600 dark:focus:ring-gray-900 dark:focus:border-gray-500"
-                />
-              </div>
+           
               <div className="mb-6">
                 <div className="flex justify-between mb-2">
                   <label
@@ -154,7 +146,7 @@ function Login() {
               <p className="text-sm text-center text-gray-400">
                 Don't have account?.
                 <Link
-                  to="/login"
+                  to="/"
                   className="font-semibold text-indigo-500 focus:text-indigo-600 focus:outline-none focus:underline"
                 >
                   Sign Up

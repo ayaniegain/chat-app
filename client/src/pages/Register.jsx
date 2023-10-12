@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios"
@@ -17,7 +17,6 @@ function Register() {
     if (validationfunc()) {
       try {
         const { username, email, password, confirmPassword } = values;
-        console.log("object");
         const { data } = await axios.post(
           `${import.meta.env.VITE_REACT_APP_API}/api/v1/auth/register`,
           {username:username,
@@ -26,12 +25,13 @@ function Register() {
           confirmPassword:confirmPassword,
           }
         );
-
         console.log(data);
+
         if (data.success) {
           setTimeout(() => {
             toast.success(data.message);
           }, 1000);
+          localStorage.setItem('chat',JSON.stringify(data.user))
           navigate("/login");
         } else {
           toast.error(data.message);
@@ -62,6 +62,13 @@ function Register() {
   const handleChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
+
+
+  useEffect(()=>{
+    if(localStorage.getItem('chat')){
+      // navigate("/");
+    }
+  },[])
 
   return (
     <>

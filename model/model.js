@@ -23,10 +23,7 @@ const userSchema = new mongoose.Schema({
         type:String,
         default: '',
     }
-    // confirmPassword:{
-    //     type:String,
-    //     required: true,
-    // }
+  
 },{timeseries:true});
 
 module.exports = mongoose.model("users", userSchema);
